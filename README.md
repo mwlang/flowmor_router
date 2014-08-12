@@ -13,7 +13,7 @@ puts p.path # => "/posts/my-first-example"
 
 or in a view where PostCategory has_many :posts
 
-```ruby
+```haml
 - PostCategory.all.each do |category|
   %h3= link_to category.title, category.path
   %ul
@@ -40,7 +40,9 @@ Its got enough functionality to work really well for me [(mwlang)](https://githu
 
 ### Is it For You?
 
-This isn't for everyone.  It does build routes from objects in the database.  It does provide functionality similar to [friendly_id](https://github.com/norman/friendly_id) or simply redefining the id of a model with AR's #to_param. If you run multiple instances of an application, you'll need to take care of syncing when the database is updated.
+This isn't for everyone.  It does build routes from objects in the database.  It does provide functionality similar to [friendly_id](https://github.com/norman/friendly_id) or by simply redefining the id of a model with AR's #to_param. If you run multiple instances of an application, you'll need to take care of syncing when the database is updated.  The simplest way to do this is by adding Post.reload_routes (for example) to the before_filter callback of the controller.  Sounds like a performance killer, but its really not.  Just think every time you refresh during development that the routes are reloaded!
+
+
 
 ### To Install
 
@@ -135,7 +137,7 @@ class Post < RoutableRecord
 end
 ```
 
-If you need to get any fancier than that, then just about everything you need can be found in the app/models/routable_record.rb implementation.
+If you need to get any fancier than that, then just about everything you need can be found in the [app/models/routable_record.rb](https://github.com/mwlang/flowmor_router/blob/master/app/models/routable_record.rb) implementation.
 
 ### TODO and Contributing
 
@@ -144,12 +146,13 @@ This is largely an extraction of functionality from multiple Rails projects.  As
 * if a model belongs_to another model, then use ActiveRecord's Reflections to automatically build richer routes
 * scan sub-directories under static to build nested pages that the static_controller can serve.
 * instead of routing *all* RoutableRecord's, add "routable" scope that defaults to *all* but can be easily changed by redefining the :routable scope on the descendant model class.
+* potentially optimize the route generator to only update the routes that actually changed (currently all routes are triggered to reload).
 
-Don't hold your breath for me, though.  Unless [I need 'em for a specific project](http://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it), they won't happen.  If you need it, implement and contribute back with pull request.  I'll take enhancements as long as they're test covered and don't break backwards compatibility.
+Please don't hold your breath for me, though.  Unless [I need 'em for a specific project](http://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it), they won't happen.  If you need it, implement and contribute back with pull request.  I'll take enhancements as long as they're test covered and don't break backwards compatibility.
 
 ## Testing
 
-Testing makes use of a dummy Rails app, which can be found under test/dummy folder.  The test scripts for this app is under test/dummy/test and you'll find many of the examples presented above as working examples in this dummy app.
+Testing makes use of a dummy Rails app, which can be found under [test/dummy folder](https://github.com/mwlang/flowmor_router/tree/master/test/dummy).  The test scripts for this app is under [test/dummy/test](https://github.com/mwlang/flowmor_router/tree/master/test/dummy/test) and you'll find many of the examples presented above as working examples in this dummy app.
 
 To test for the first time, you'll need to initialize the database with:
 
