@@ -72,7 +72,7 @@ class PostController < ApplicationController
 end
 ```
 
-Note that you can find the record using the params[:id] which will be the actual id of the record because the routes are constructed specific to the ID for the object to be fetched.  This way we can skip the whole #to_param and params[:id].to_i non-sense or doing a more expensive SQL query and indexing on real titles, names, etc.
+Note that you can find the record using the params[:id] which will be the actual id of the record because the routes are constructed specific to the ID for the object to be fetched.  This way we can skip the whole #to_param and params[:id].to_i non-sense or doing a more expensive SQL query and indexing on real titles, names, etc.  The other thing I like about this approach is that it plays nice with other toys like ActiveAdmin, which can get finicky about those #to_param changes.
 
 To make an ActiveRecord model routable, change the inheritance after generating the model from ActiveRecord::Base to RoutableRecord like so:
 
@@ -108,6 +108,10 @@ class PostCategory < RoutableRecord
 
   set_controller_action "blog#category"
 
+  # Not necessary here, but shows you how to change the route's model name.
+  # Here, we change "post_category" (the default) to "category"
+  # For example, PostCategory.create(title: "General"), the 
+  # route name becomes "category_general" instead of "post_category_general"
   def route_model
     "category"
   end
