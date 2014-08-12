@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = FlowmorRouter::VERSION
   s.authors     = ["Michael Lang"]
   s.email       = ["mwlang@cybrains.net"]
-  s.homepage    = "http://codeconnoisseur.org"
+  s.homepage    = "https://github.com/mwlang/flowmor_router"
   s.summary     = "FlowmorRouter makes it easy to build routes out of ActiveRecord objects."
   s.description = "FlowmorRouter allows you to create 'friendly' routes easily from objects stored in the database as well as by simply placing templates into app/views/static folder."
   s.license     = "MIT"
