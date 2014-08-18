@@ -24,6 +24,8 @@ class ArticleTest < ActiveSupport::TestCase
     assert_raise FlowmorRouter::UnroutableRecord do
       Article.create(title: nil).path
     end
-    assert Article.create(title: "Dummy Article").path, '/articles/dummy-article'
+    assert_raise FlowmorRouter::UnroutedRecord do
+      assert Article.create(title: "Dummy Article").path, '/articles/dummy-article'
+    end
   end
 end

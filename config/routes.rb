@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   # Routes from RoutableRecord descendants
   RoutableRecord.descendants.each do |model|
-    model.all.each do |record|
+    model.routable.each do |record|
       get record.route,
       to: record.controller_action,
       defaults: { id: record.id },

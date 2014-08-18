@@ -34,15 +34,16 @@ Every model instance's route is named after the model and name.
 
 ## State of the project
 
-### 0.0.1
+### 0.0.3
+### Tested and Works on Rails 4.x and Ruby 2.x
 
-Its got enough functionality to work really well for me [(mwlang)](https://github.com/mwlang) in its current form.  Its a simple implementation with relatively few lines of code, adequately test covered.  It works and is used in production on a handful of sites.  You can see it in action on [my personal site](http://codeconnoisseur.org) and [business site](http://cybrains.net).
+Its got enough functionality to work really well for me [(mwlang)](https://github.com/mwlang) in its current form.  It's a simple implementation with relatively few lines of code, adequately test covered.  It works and is used in production on a handful of sites.  You can see it in action on [my personal site](http://codeconnoisseur.org) and [business site](http://cybrains.net).
 
 ### Is it For You?
 
-This isn't for everyone.  It does build routes from objects in the database.  It does provide functionality similar to [friendly_id](https://github.com/norman/friendly_id) or by simply redefining the id of a model with AR's #to_param. If you run multiple instances of an application, you'll need to take care of syncing when the database is updated.  The simplest way to do this is by adding Post.reload_routes (for example) to the before_filter callback of the controller.  Sounds like a performance killer, but its really not.  Just think every time you refresh during development that the routes are reloaded!
+This isn't for everyone.  It does build routes from objects in the database.  Rails purists will argue this method pollutes the routes space.  It does provide functionality similar to [friendly_id](https://github.com/norman/friendly_id) or by simply redefining the id of a model with AR's #to_param. If you run multiple instances of an application, you'll need to take care of syncing when the database is updated.  The simplest way to do this is by adding Post.reload_routes (for example) to the before_filter callback of the controller.  Sounds like a performance killer, but its really not.  Just think every time you refresh during development that the routes are reloaded! 
 
-
+On the other hand, this approach allows you a lot of flexibility to creating truly custom routes in your app.  It also allows you to avoid using a global "match any" in your config/routes.rb.  A use case is porting over a WordPress site to Rails where there was a highly customized permalink structure in place.  
 
 ### To Install
 
@@ -143,6 +144,14 @@ end
 
 If you need to get any fancier than that, then just about everything you need can be found in the [app/models/routable_record.rb](https://github.com/mwlang/flowmor_router/blob/master/app/models/routable_record.rb) implementation.
 
+By default, all RoutableRecord instances are added to the routes table.  What gets routed can be customized by overriding the :routable scope.
+
+```ruby
+class Article < RoutableRecord
+  scope :routable, -> { where published: true }
+  # ...
+end
+```
 ### TODO and Contributing
 
 This is largely an extraction of functionality from multiple Rails projects.  As such, it has the features I needed to fully extract to the engine.  However, some possible enhancements came to mind as I pulled this together:

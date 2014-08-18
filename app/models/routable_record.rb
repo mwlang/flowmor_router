@@ -1,6 +1,8 @@
 class RoutableRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  scope :routable, -> {}
+  
   def self.route_model
     name.underscore.downcase
   end
@@ -90,11 +92,19 @@ class RoutableRecord < ActiveRecord::Base
   end
   
   def url
-    send("#{route_name}_url", default_url_options)
+    begin
+      send("#{route_name}_url", default_url_options)
+    rescue NoMethodError
+      raise FlowmorRouter::UnroutedRecord.new("#{self.inspect} was not routed.")
+    end
   end
 
   def path
-    send("#{route_name}_path")
+    begin
+      send("#{route_name}_path")
+    rescue NoMethodError
+      raise FlowmorRouter::UnroutedRecord.new("#{self.inspect} was not routed.")
+    end
   end
   
   def new_name_value
