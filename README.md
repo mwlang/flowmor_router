@@ -35,9 +35,9 @@ Every model instance's route is named after the model and name.
 
 ## State of the project
 
-### 0.1.1
-### Tested and Works on Rails 4.x and Ruby 2.x
-### added ability to use act_as_routable instead of inheriting from RoutableRecord
+* 0.1.1
+* Tested and Works on Rails 4.x and Ruby 2.x
+* Changed usage pattern to use act_as_routable instead of inheriting from RoutableRecord
 
 Its got enough functionality to work really well for me [(mwlang)](https://github.com/mwlang) in its current form.  It's a simple implementation with relatively few lines of code, adequately test covered.  It works and is used in production on a handful of sites.  You can see it in action on [my personal site](http://codeconnoisseur.org) and [business site](http://cybrains.net).
 
