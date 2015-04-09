@@ -97,7 +97,7 @@ module FlowmorRouter
         @controller_action || default_controller_action
       end
 
-      def acts_as_flowmor_routable(options = {})
+      def acts_as_routable(options = {})
         ROUTABLE_MODEL_CLASSES << self
         scope :routable, options[:scope] || lambda {}
 

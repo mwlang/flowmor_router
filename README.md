@@ -3,7 +3,8 @@
 FlowmorRouter is a Rails::Engine that enables ActiveRecord Models to route themselves in Rails 4.x applications. For example:
 
 ```ruby
-class Post < RoutableRecord
+class Post < ActiveRecord::Base
+  acts_as_routable
 end
 
 p = Post.create(title: "My First Post")
@@ -34,8 +35,9 @@ Every model instance's route is named after the model and name.
 
 ## State of the project
 
-### 0.0.3
+### 0.1.1
 ### Tested and Works on Rails 4.x and Ruby 2.x
+### added ability to use act_as_routable instead of inheriting from RoutableRecord
 
 Its got enough functionality to work really well for me [(mwlang)](https://github.com/mwlang) in its current form.  It's a simple implementation with relatively few lines of code, adequately test covered.  It works and is used in production on a handful of sites.  You can see it in action on [my personal site](http://codeconnoisseur.org) and [business site](http://cybrains.net).
 
@@ -75,10 +77,11 @@ end
 
 Note that you can find the record using the params[:id] which will be the actual id of the record because the routes are constructed specific to the ID for the object to be fetched.  This way we can skip the whole #to_param and params[:id].to_i non-sense or doing a more expensive SQL query and indexing on real titles, names, etc.  The other thing I like about this approach is that it plays nice with other toys like ActiveAdmin, which can get finicky about those #to_param changes.
 
-To make an ActiveRecord model routable, change the inheritance after generating the model from ActiveRecord::Base to RoutableRecord like so:
+To make an ActiveRecord model routable, call acts_as_routable after generating the model like so:
 
 ```ruby
-class Post < RoutableRecord
+class Post < ActiveRecord::Base
+  acts_as_routable
   # ...
 end
 ```
@@ -88,26 +91,27 @@ end
 Ok, here's how to do it.  To change the field that the route name is derived from:
 
 ```ruby
-class NewsArticle < RoutableRecord
-  set_derived_name_field :caption # changes from :title
-  set_name_field  :slug # changes from :name
+class NewsArticle < ActiveRecord::Base
+  acts_as_routable \
+    derived_name_field: :caption,  # changes from :title
+    name_field: :slug              # changes from :name
 end
 ```
 To change the controller and action:
 
 ```ruby
-class PostCategory < RoutableRecord 
-  set_controller_action "blog#category"
+class PostCategory < ActiveRecord::Base
+  acts_as_routable controller_action: "blog#category"
 end
 ```
 
 To change how the route and route name are constructed (say you have Post that belongs_to PostCategory and need to avoid naming collision should two posts have same title, but belong to different categories):
 
 ```ruby
-class PostCategory < RoutableRecord
+class PostCategory < ActiveRecord::Base
   has_many :posts, foreign_key: "category_id"
 
-  set_controller_action "blog#category"
+  acts_as_routable controller_action: "blog#category"
 
   # Not necessary here, but shows you how to change the route's model name.
   # Here, we change "post_category" (the default) to "category"
@@ -118,10 +122,10 @@ class PostCategory < RoutableRecord
   end
 end
 
-class Post < RoutableRecord
+class Post < ActiveRecord::Base
   belongs_to :category, class_name: "PostCategory", counter_cache: true
 
-  set_controller_action "blog#show"
+  acts_as_routable controller_action: "blog#show"
 
   # Assuming you have a Post.create(title: "Some Title", category: PostCategory.create(title: "General"))
   # The names of the post route's name changes from post_some_title to post_general_some_title by
@@ -142,13 +146,13 @@ class Post < RoutableRecord
 end
 ```
 
-If you need to get any fancier than that, then just about everything you need can be found in the [app/models/routable_record.rb](https://github.com/mwlang/flowmor_router/blob/master/app/models/routable_record.rb) implementation.
+If you need to get any fancier than that, then just about everything you need can be found in the [lib/flowmor_router/acts_as_flowmor_routable.rb](https://github.com/mwlang/flowmor_router/blob/master/lib/flowmor_router/acts_as_flowmor_routable.rb) implementation.
 
-By default, all RoutableRecord instances are added to the routes table.  What gets routed can be customized by overriding the :routable scope.
+By default, all acts_as_routable models and their instances are added to the routes table.  What gets routed can be customized by supplying a :scope option.
 
 ```ruby
-class Article < RoutableRecord
-  scope :routable, -> { where published: true }
+class Article < ActiveRecord::Base
+  acts_as_routable scope: -> { where published: true }
   # ...
 end
 ```
@@ -158,7 +162,6 @@ This is largely an extraction of functionality from multiple Rails projects.  As
 
 * if a model belongs_to another model, then use ActiveRecord's Reflections to automatically build richer routes
 * scan sub-directories under static to build nested pages that the static_controller can serve.
-* instead of routing *all* RoutableRecord's, add "routable" scope that defaults to *all* but can be easily changed by redefining the :routable scope on the descendant model class.
 * potentially optimize the route generator to only update the routes that actually changed (currently all routes are triggered to reload).
 
 Please don't hold your breath for me, though.  Unless [I need 'em for a specific project](http://en.wikipedia.org/wiki/You_aren%27t_gonna_need_it), they won't happen.  If you need it, implement and contribute back with pull request.  I'll take enhancements as long as they're test covered and don't break backwards compatibility.

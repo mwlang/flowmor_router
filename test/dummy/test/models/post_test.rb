@@ -29,6 +29,10 @@ class PostTest < ActiveSupport::TestCase
     assert_equal 'post', Post.route_model
   end
   
+  test "post#route" do
+    assert_equal Post.new(title: "Dummy Post", name: "dummy-post").route, '/general/dummy-post'
+  end
+
   test "post#path" do
     assert_raise FlowmorRouter::UnroutableRecord do
       Post.new(title: nil).path
