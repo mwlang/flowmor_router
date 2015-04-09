@@ -22,7 +22,7 @@ class PostCategoryCategoryTest < ActiveSupport::TestCase
   end
   
   test "PostCategory#route_model" do 
-    assert_equal 'post_category', PostCategory.route_model
+    assert_equal 'category', PostCategory.route_model
   end
   
   test "post_category#path" do

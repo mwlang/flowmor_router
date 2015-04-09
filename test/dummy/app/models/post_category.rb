@@ -1,9 +1,7 @@
-class PostCategory < RoutableRecord
+class PostCategory < ActiveRecord::Base
   has_many :posts, foreign_key: "category_id"
 
-  set_controller_action "blog#category"
-
-  def route_model
-    "category"
-  end
+  acts_as_flowmor_routable \
+    controller_action: "blog#category",
+    route_model: "category"
 end

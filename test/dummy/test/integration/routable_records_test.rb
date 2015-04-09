@@ -7,7 +7,7 @@ class RoutableRecordsTest < ActionDispatch::IntegrationTest
     assert_equal "/general/lets-test-this", post.path
     get post.path
     assert_response :success
-    assert_select "h1", "Let&#39;s Test This"
+    assert_select "h1", "Let's Test This"
   end
   
   test "only routable routes built" do 
@@ -22,4 +22,11 @@ class RoutableRecordsTest < ActionDispatch::IntegrationTest
       get '/articles/ignore-this'
     end
   end
+
+  test "two words" do 
+    get static_two_words_path
+    assert_response :success
+    assert_select "h1", "Two Words"
+  end
+  
 end

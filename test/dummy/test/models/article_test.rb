@@ -12,9 +12,20 @@ class ArticleTest < ActiveSupport::TestCase
   test "article#route_name_prefix" do
     assert Article.new(title: "Dummy Article").route_name_prefix, 'article'
   end
-
+  
   test "article#derived_name_field_value" do 
     assert Article.new(title: "Dummy Article").derived_name_field_value, 'dummy-article'
+  end
+
+  test "unpublished articles not routed" do 
+    published = Article.create(title: "Published", published: true)
+    unpublished = Article.create(title: "Unpublished", published: false)
+    assert_equal published.published, true
+    assert_equal unpublished.published, false
+    assert_equal published.path, '/articles/published'
+    assert_raise FlowmorRouter::UnroutedRecord do
+      unpublished.path
+    end
   end
   
   test "article#path" do

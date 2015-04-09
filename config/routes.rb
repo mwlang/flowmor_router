@@ -1,5 +1,14 @@
 Rails.application.routes.draw do
 
+  FlowmorRouter::ROUTABLE_MODEL_CLASSES.each do |model|
+    model.routable.each do |record|
+      get record.route,
+      to: record.controller_action,
+      defaults: { id: record.id },
+      as: record.route_name
+    end
+  end
+  
   # Routes from RoutableRecord descendants
   RoutableRecord.descendants.each do |model|
     model.routable.each do |record|
@@ -15,7 +24,7 @@ Rails.application.routes.draw do
     route = File.basename fn.split(".").first
     # ignore partials
     if route[0] != "_"
-      get("/#{route}", to: "static##{route}", as: "static_#{route}") 
+      get("/#{route.gsub("_", "-")}", to: "static##{route}", as: "static_#{route.gsub("-", "_")}") 
     end
   end
 end

@@ -1,7 +1,9 @@
-class Post < RoutableRecord
+class Post < ActiveRecord::Base
   belongs_to :category, class_name: "PostCategory", counter_cache: true
 
-  set_controller_action "blog#show"
+  acts_as_flowmor_routable \
+    controller_action: "blog#show",
+    route: -> { "/#{category_name}/#{name}" }
 
   # Appending category name to the route name prefix
   def route_name_prefix

@@ -12,7 +12,7 @@ class NewsArticleTest < ActiveSupport::TestCase
   test "news_article#route_name_prefix" do
     assert_equal 'news_articles', NewsArticle.new(caption: "Dummy News Article").route_name_prefix
   end
-
+  
   test "news_article#derived_name_field_value" do 
     assert_equal 'Dummy News Article', NewsArticle.new(caption: "Dummy News Article").derived_name_field_value
   end
@@ -20,7 +20,7 @@ class NewsArticleTest < ActiveSupport::TestCase
   test "news_article#new_name_value" do 
     assert_equal 'dummy-news-article', NewsArticle.new(caption: "Dummy News Article").new_name_value
   end
-
+  
   test "news_article#slug" do 
     assert_equal 'dummy-news-article', NewsArticle.create(caption: "Dummy News Article").slug
   end
