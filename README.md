@@ -1,6 +1,6 @@
-# FlowmorRouter
+# Flowmor Router
 
-FlowmorRouter is a Rails::Engine that enables ActiveRecord Models to route themselves in Rails 4.x applications. For example:
+Flowmor Router is a Rails::Engine that enables ActiveRecord Models to route themselves in Rails 4.x applications. For example:
 
 ```ruby
 class Post < ActiveRecord::Base
