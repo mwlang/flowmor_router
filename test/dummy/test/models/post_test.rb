@@ -1,54 +1,24 @@
 require 'test_helper'
 
 class PostTest < ActiveSupport::TestCase
-  test "post#controller_action" do
-    assert_equal "blog#show", Post.new.controller_action
-  end
-  
-  test "default category is 'general'" do 
-    assert_equal 'general', Post.new.category_name
+  setup do
+    @category = PostCategory.create(name: "general")
+    @post = Post.create(title: "Once Upon a Time")
   end
   
   test "post#route_name" do 
-    assert_equal 'posts_general_dummy_post', Post.new(title: "Dummy Post").route_name
+    assert_equal 'by_category_posts_general_once_upon_a_time', @post.route_name
   end
   
-  test "post#route_name_prefix" do
-    assert_equal 'posts_general', Post.new(title: "Dummy Post").route_name_prefix
-  end
-
-  test "post#derived_name_field_value" do 
-    assert_equal 'Dummy Post', Post.new(title: "Dummy Post").derived_name_field_value
-  end
-  
-  test "post#new_name_value" do 
-    assert_equal 'dummy-post', Post.new(title: "Dummy Post").new_name_value
-  end
-  
-  test "Post#route_model" do 
-    assert_equal 'post', Post.route_model
-  end
-  
-  test "post#route" do
-    assert_equal Post.new(title: "Dummy Post", name: "dummy-post").route, '/general/dummy-post'
+  test "Post controller_action" do 
+    assert_equal 'blog#show', Post.flowmor_posts_router_class.controller_action
   end
 
   test "post#path" do
-    assert_raise FlowmorRouter::UnroutableRecord do
-      Post.new(title: nil).path
-    end
-    assert_raise FlowmorRouter::UnroutableRecord do
-      Post.create(title: nil).path
-    end
-    assert_equal '/general/dummy-post', Post.create(title: "Dummy Post").path
+    assert_equal '/by_category/posts/general/once-upon-a-time', @post.path
   end
-  
-  test "post#url" do 
-    assert_raise FlowmorRouter::UnroutableRecord do
-      Post.new(title: nil).url
-    end
-    assert_raise FlowmorRouter::UnroutableRecord do
-      Post.create(title: nil).url
-    end
+
+  test "post#archive_path" do
+    assert_equal '/archive/once-upon-a-time', @post.archive_path
   end
 end

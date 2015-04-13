@@ -1,6 +1,7 @@
 require "flowmor_router/engine"
 require "flowmor_router/exceptions"
-require "flowmor_router/acts_as_flowmor_routable"
+require "flowmor_router/router_classes"
+require "flowmor_router/acts_as_routable"
 
 module FlowmorRouter
 
