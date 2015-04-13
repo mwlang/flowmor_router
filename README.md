@@ -54,6 +54,7 @@ Where:
 * Also greatly simplified some of the implementation and cleaned up weird naming conventions.
 * Added ability to have multiple actors on one model
 * Added suffix and prefix
+* There was a huge amount of refactoring from 0.0.x to 0.1.x and then again to 0.2.x, but that's more because I wasn't clear where I wanted to take things and had some oddly named stuff until 0.2.x.  Things should be fairly stable going forward.
 
 Its got enough functionality to work really well for me [(mwlang)](https://github.com/mwlang) in its current form.  It's a simple implementation with relatively few lines of code, adequately test covered.  It works and is used in production on a handful of sites.  You can see it in action on [my personal site](http://codeconnoisseur.org) and [business site](http://cybrains.net).
 

@@ -24,7 +24,6 @@ module FlowmorRouter
         
         # Register and assign a distinctive name to the router_class
         router_class = FlowmorRouter::RouterClasses.register(actor, self, options)
-        puts "REGISTERED #{router_class.named_instance}"
         class_attribute router_class.named_instance
         self.send "#{router_class.named_instance}=", router_class
 
@@ -43,7 +42,9 @@ module FlowmorRouter
         end
         
         begin
-          Rails.application.routes_reloader.reload! unless Rails.configuration.eager_load
+          unless Rails.configuration.eager_load || Rails.env == "test"
+            Rails.application.routes_reloader.reload! 
+          end
         rescue SystemStackError
           # NOP -- Supressing Stack Level Too deep error
           # caused by models being loaded lazily during development mode.
