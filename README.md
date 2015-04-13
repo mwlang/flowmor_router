@@ -27,11 +27,23 @@ If you're blogging with markdown or other file-based approaches, you'll apprecia
 
 ```haml
 =%h1 About
-%p Please be sure to read my post, #{link_to "How to Use Flowmor Router", post_how_to_use_flowmor_router_path}
+%p 
+  Please be sure to read my post, 
+  =link_to "How to Use Flowmor Router", post_how_to_use_flowmor_router_path
 ```
 
-Every model instance's path is named after the model and title/slug/name for the record.  How the paths and path names are generated can be customized.
+Every model instance's path is named after the model and title/slug/name for the record.  How the paths and path names are generated can be customized.  A route's constructed of the following pattern:
 
+```ruby
+"#{route_path_prefix}#{actor}#{route_path_suffix(record)}/#{name(record)}"
+```
+
+Where: 
+
+* route_path_prefix is optional and set by the :prefix option
+* actor, which is the "acts_as" name and is either explicitly named (e.g. acts_as_routable :posts) or inferred from the model name when omitted.
+* route_path_suffix is optional and set by the :suffix option
+* name is the value taken from the record's name field, or parameterized title field or computed via the method supplied with the :name option.
 
 ## State of the project
 
@@ -47,7 +59,7 @@ Its got enough functionality to work really well for me [(mwlang)](https://githu
 
 ### Is it For You?
 
-This isn't for everyone.  The Flowmor Router build routes ahead of time based on objects in the database.  Rails purists will argue this method pollutes the routes space.  It does provide functionality similar to [friendly_id](https://github.com/norman/friendly_id) or by simply redefining the id of a model with AR's #to_param.  If you run multiple instances of an application, you'll need to take care of syncing when the database is updated.  The simplest way to do this is by adding Post.reload_routes (for example) to the before_filter callback of the controller.  Sounds like a performance killer, but its really not.  Just think every time you refresh during development that the routes are reloaded! 
+This isn't for everyone.  The Flowmor Router builds routes ahead of time based on objects in the database.  Rails purists will argue this method pollutes the routes space.  It does provide functionality similar to [friendly_id](https://github.com/norman/friendly_id) or by simply redefining the id of a model with AR's #to_param.  If you run multiple instances of an application, you'll need to take care of syncing when the database is updated.  The simplest way to do this is by adding Post.reload_routes (for example) to the before_filter callback of the controller.  Sounds like a performance killer, but its really not.  Just think every time you refresh during development that the routes are reloaded! 
 
 On the other hand, this approach allows you a lot of flexibility to creating truly custom routes in your app.  It also allows you to avoid using a global "match any" in your config/routes.rb.  A use case is porting over a WordPress site to Rails where there was a highly customized permalink structure in place.  It's really only meant for "#show" actions.  I personally wouldn't try to also incorporate CRUD actions with friendly route names.  Rails' conventional routes does the job extremely well for CRUD actions.  This also means other gems like ActiveAdmin will work as advertised since friendly routes aren't interfering with Rails routes.
 
@@ -296,7 +308,7 @@ Similar to :prefix is the :suffix and it's inserted into the route constructed r
 
 ### route
 
-If you want to skip all the fancy route building provided by the Engine, then pass in a Proc to the :route option.
+If you want to skip all the fancy route building provided by the Engine, then pass in a Proc to the :route option and do it yourself.
 
 ```ruby
 class Post < ActiveRecord::Base
@@ -320,7 +332,7 @@ end
 @post.path # => /posts/my_-_silly_-_title
 ```
 
-If you need to get any fancier than that, then just about everything you need can be found in the [lib/flowmor_router/acts_as_flowmor_routable.rb](https://github.com/mwlang/flowmor_router/blob/master/lib/flowmor_router/acts_as_flowmor_routable.rb) implementation.
+If you need to get any fancier than that, then just about everything you need can be found in the [lib/flowmor_router/acts_as_routable.rb](https://github.com/mwlang/flowmor_router/blob/master/lib/flowmor_router/acts_as_routable.rb) implementation.
 
 By default, all acts_as_routable models and their instances are added to the routes table.  What gets routed can be customized by supplying a :scope option.
 
