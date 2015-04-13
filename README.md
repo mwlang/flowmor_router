@@ -332,7 +332,7 @@ end
 @post.path # => /posts/my_-_silly_-_title
 ```
 
-If you need to get any fancier than that, then just about everything you need can be found in the [lib/flowmor_router/acts_as_routable.rb](https://github.com/mwlang/flowmor_router/blob/master/lib/flowmor_router/acts_as_routable.rb) implementation.
+If you need to get any fancier than that, then just about everything you need can be found in the [lib/flowmor_router/router_classes.rb](https://github.com/mwlang/flowmor_router/blob/master/lib/flowmor_router/router_classes.rb) implementation.
 
 By default, all acts_as_routable models and their instances are added to the routes table.  What gets routed can be customized by supplying a :scope option.
 
