@@ -1,5 +1,7 @@
 # Flowmor Router
 
+[![Code Climate](https://codeclimate.com/github/mwlang/flowmor_router/badges/gpa.svg)](https://codeclimate.com/github/mwlang/flowmor_router)
+
 Flowmor Router is a Rails::Engine that enables ActiveRecord Models to route themselves in Rails 4.x applications. For example:
 
 ```ruby
