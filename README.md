@@ -74,21 +74,21 @@ For those of you who just need good examples and not a lot of words.  The follow
 ```ruby
 class KitchenSink < ActiveRecord::Base
   acts_as_routable :sink,
-    scope: -> { where(nothing_missing: true) }
-    prefix: -> { :kitchen },
+    scope: -> { where(nothing_missing: true).select(:id, :display_name) }
+    prefix: :kitchen,
     suffix: [:faucet, :drain],
     delimiter: "_",
     name_field: :appliance
-    title_field: :display
-    name: -> { :sluggerize }
-    route: -> { :route }
+    title_field: :display_name
+    name: :sluggerize
+    route: :route
 
     def kitchen
       [:fancy, :kitchen]
     end
       
     def sluggerize 
-      self.title.downcase.parameterize("_")
+      self.display_name.downcase.parameterize("_")
     end
     
   def route 
@@ -346,6 +346,15 @@ class Article < ActiveRecord::Base
   # ...
 end
 ```
+
+To limit the fields retrieved from the DBMS when drawing the routes, then add a select to your scope.  Just be sure to select all the fields involved in constructing the route path:
+
+```ruby
+class Post < ActiveRecord::Base
+  acts_as_routable scope: -> { where(published: true).select(:id, :name, :title) }
+  # ...
+end
+
 ### TODO and Contributing
 
 This is largely an extraction of functionality from multiple Rails projects.  As such, it has the features I needed to fully extract to the engine.  However, some possible enhancements came to mind as I pulled this together:

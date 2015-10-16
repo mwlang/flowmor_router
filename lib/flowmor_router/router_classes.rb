@@ -82,7 +82,7 @@ module FlowmorRouter
   # AND
   #
   # route_prefix             = posts
-  # actor               = archive
+  # actor                    = archive
   # route_name               = posts_archive_title_me_silly
   # route_path               = posts_archive_title_me_silly_path
   # route_url                = posts_archive_title_me_silly_url
