@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    flowmor_router (0.2.5)
+    flowmor_router (0.2.6)
       rails (~> 4)
 
 GEM
