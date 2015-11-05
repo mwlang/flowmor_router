@@ -218,8 +218,13 @@ module FlowmorRouter
       "/" + route_prefix(record).join("/")
     end
     
-    def route_name record
-      "#{route_name_prefix(record)}#{route_base_name}_#{route_name_suffix(record)}#{name(record)}".underscore.parameterize("_")
+    def verb_prefix verb
+      return "#{verb}_" if verb
+      "#{controller_action.keys.first}_" if controller_action.is_a? Hash
+    end
+    
+    def route_name record, verb=nil
+      "#{verb_prefix(verb)}#{route_name_prefix(record)}#{route_base_name}_#{route_name_suffix(record)}#{name(record)}".underscore.parameterize("_")
     end
 
     def route_path record

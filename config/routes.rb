@@ -15,10 +15,20 @@ Rails.application.routes.draw do
     Rails.logger.debug "FlowmorRouter MODEL: #{router_class.model.name}"
     router_class.routable.each do |record|
       Rails.logger.debug "FlowmorRouter ROUTING: #{router_class.route_path(record)} to: #{router_class.controller_action} defaults: { id: #{record.id} } as: #{router_class.route_name(record)}"
-      get router_class.route_path(record),
-        to: router_class.controller_action,
-        defaults: { id: record.id },
-        as: router_class.route_name(record)
+      if router_class.controller_action.is_a? String
+        get router_class.route_path(record),
+          to: router_class.controller_action,
+          defaults: { id: record.id },
+          as: router_class.route_name(record)
+      elsif router_class.controller_action.is_a? Hash
+        router_class.controller_action.each_pair do |verb, action|
+          match router_class.route_path(record),
+            to: action,
+            defaults: { id: record.id },
+            via: verb,
+            as: "#{router_class.route_name(record, verb)}"
+        end
+      end
     end
   end
 end

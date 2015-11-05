@@ -287,6 +287,14 @@ class PostCategory < ActiveRecord::Base
 end
 ```
 
+The above assumes only a GET action for the route.  To have multiple verbs on the route, declare controller_action with a hash:
+
+```ruby
+class Post < ActiveRecord::Base
+  acts_as_routable controller_action: { get: "blog#show", post: "blog#update" }
+end
+```
+
 To change how the route and route name are constructed (say you have Post that belongs_to PostCategory and need to avoid naming collision should two posts have same title, but belong to different categories):
 
 ```ruby

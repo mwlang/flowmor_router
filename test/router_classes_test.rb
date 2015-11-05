@@ -215,5 +215,31 @@ module FlowmorRouter
         RouterClasses.unregister Fib
       end
     end
+    
+    test "Slick becomes routable with multiple action verbs" do
+      begin
+        class Slick < Foo
+          acts_as_routable controller_action: { get: "slick#show", post: "slick#update" }
+        end
+       
+        item = Slick.new("FooBar", "foo-bar")
+        rc = Slick.flowmor_slicks_router_class
+        
+        assert_equal({ get: "slick#show", post: "slick#update" }, rc.controller_action)
+        assert_equal Slick,                     rc.model
+        assert_equal "slicks",                  rc.actor
+        assert_equal "slicks",                  rc.route_base_name
+        assert_equal "/slicks",                 rc.route_base_path
+        assert_equal "foo-bar",                 rc.name(item)
+        assert_equal "flowmor_slicks_routable", rc.scope_name
+        assert_equal "/slicks/foo-bar",         rc.route_path(item)
+        assert_equal "path",                    rc.path_method_name
+        assert_equal "url",                     rc.url_method_name
+        assert_equal "get_slicks_foo_bar",      rc.route_name(item)
+      ensure
+        RouterClasses.unregister Slick
+      end
+    end
+    
   end
 end
